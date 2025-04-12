@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bicycle Dodge Game</title>
+  <style>
+    body {
+      text-align: center;
+      background: #e0f7fa;
+      font-family: sans-serif;
+    }
+
+    #gameArea {
+      width: 300px;
+      height: 400px;
+      margin: auto;
+      background: #fff;
+      border: 2px solid #333;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #bicycle {
+      width: 50px;
+      height: 50px;
+      background: url('https://i.imgur.com/z4d4kWk.png') no-repeat center;
+      background-size: cover;
+      position: absolute;
+      bottom: 10px;
+      left: 125px;
+    }
+
+    #obstacle {
+      width: 30px;
+      height: 30px;
+      background: red;
+      position: absolute;
+      top: 0;
+      left: 135px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Bicycle Dodge Game</h1>
+  <div id="gameArea">
+    <div id="bicycle"></div>
+    <div id="obstacle"></div>
+  </div>
+  <script>
+    let bicycle = document.getElementById("bicycle");
+    let obstacle = document.getElementById("obstacle");
+    let gameArea = document.getElementById("gameArea");
+
+    document.addEventListener("keydown", function (e) {
+      let left = parseInt(window.getComputedStyle(bicycle).getPropertyValue("left"));
+      if (e.key === "ArrowLeft" && left > 0) {
+        bicycle.style.left = left - 15 + "px";
+      } else if (e.key === "ArrowRight" && left < 250) {
+        bicycle.style.left = left + 15 + "px";
+      }
+    });
+
+    function moveObstacle() {
+      let top = parseInt(window.getComputedStyle(obstacle).getPropertyValue("top"));
+      if (top >= 370) {
+        obstacle.style.top = 0 + "px";
+        obstacle.style.left = Math.floor(Math.random() * 270) + "px";
+      } else {
+        obstacle.style.top = top + 5 + "px";
+      }
+
+      // Check collision
+      let bikeLeft = parseInt(window.getComputedStyle(bicycle).getPropertyValue("left"));
+      let obsLeft = parseInt(window.getComputedStyle(obstacle).getPropertyValue("left"));
+      let obsTop = parseInt(window.getComputedStyle(obstacle).getPropertyValue("top"));
+
+      if (obsTop > 320 && obsTop < 370 && Math.abs(bikeLeft - obsLeft) < 30) {
+        alert("Game Over!");
+        obstacle.style.top = 0 + "px";
+      }
+
+      requestAnimationFrame(moveObstacle);
+    }
+
+    moveObstacle();
+  </script>
+</body>
+</html>
